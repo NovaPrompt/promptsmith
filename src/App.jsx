@@ -2,38 +2,54 @@ import { useState } from 'react';
 import './App.css';
 
 function App() {
-  const [goal, setGoal] = useState('');
+  const [userGoal, setUserGoal] = useState('');
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const generatePrompt = async () => {
+  const handleGeneratePrompt = async () => {
     setLoading(true);
+    setPrompt('');
 
-    // Simulated prompt logic — we’ll connect to GPT soon
-    const suggestion = `Write a clear, specific ChatGPT prompt that helps the AI ${goal.toLowerCase()}. Include audience, tone, and desired output format.`;
+    try {
+      const res = await fetch('/api/generatePrompt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userGoal }),
+      });
 
-    setPrompt(suggestion);
+      const data = await res.json();
+      setPrompt(data.prompt);
+    } catch (err) {
+      setPrompt('Something went wrong. Please try again.');
+    }
+
     setLoading(false);
   };
 
   return (
-    <div className="container">
+    <div className="app">
       <h1>🧠 PromptNova</h1>
       <p>Launch smarter prompts with PromptNova — your personal AI copilot.</p>
 
       <textarea
         placeholder="What do you want ChatGPT to do?"
-        value={goal}
-        onChange={(e) => setGoal(e.target.value)}
+        value={userGoal}
+        onChange={(e) => setUserGoal(e.target.value)}
+        rows={4}
       />
 
-      <button onClick={generatePrompt} disabled={loading || !goal}>
-        {loading ? 'Thinking...' : 'Build Prompt'}
+      <button
+        onClick={handleGeneratePrompt}
+        disabled={!userGoal || loading}
+      >
+        {loading ? 'Building...' : 'Build Prompt'}
       </button>
 
       {prompt && (
-        <div className="output">
-          <h3>Optimized Prompt:</h3>
+        <div className="result">
+          <h3>📝 Optimized Prompt:</h3>
           <p>{prompt}</p>
         </div>
       )}
