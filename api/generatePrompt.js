@@ -1,30 +1,35 @@
+// /api/generatePrompt.js
+
 export default async function handler(req, res) {
     const { userGoal } = req.body;
   
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a prompt engineer that helps users write better prompts.',
-          },
-          {
-            role: 'user',
-            content: `Create a highly effective ChatGPT prompt that helps accomplish: "${userGoal}"`,
-          },
-        ],
-      }),
-    });
+    if (!userGoal) {
+      return res.status(400).json({ prompt: 'Missing user goal' });
+    }
   
-    const data = await response.json();
-    const generatedPrompt = data.choices?.[0]?.message?.content || 'Error generating prompt.';
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [
+            { role: 'system', content: 'You are a prompt generator assistant.' },
+            { role: 'user', content: `Turn this idea into a well-structured AI prompt: ${userGoal}` },
+          ],
+        }),
+      });
   
-    res.status(200).json({ prompt: generatedPrompt });
+      const data = await response.json();
+      const finalPrompt = data.choices?.[0]?.message?.content?.trim() || 'No prompt generated.';
+  
+      res.status(200).json({ prompt: finalPrompt });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ prompt: 'Error generating prompt.' });
+    }
   }
   
