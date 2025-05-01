@@ -14,6 +14,18 @@ body {
   align-items: center;
   padding: 2rem;
   text-align: center;
+  background-color: #fff; /* 👈 add this line */
+}
+
+
+}
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
 }
 
 h1 {
