@@ -22,6 +22,7 @@ function App() {
       const data = await res.json();
       setPrompt(data.prompt);
     } catch (err) {
+      console.error(err);
       setPrompt('Something went wrong. Please try again.');
     }
 
@@ -63,7 +64,7 @@ function App() {
         </div>
       )}
     </div>
-  ); // ✅ CLOSE return()
+  );
 }
 
 export default App;
