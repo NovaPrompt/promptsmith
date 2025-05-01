@@ -1,5 +1,5 @@
 // /api/generatePrompt.js
-import fetch from 'node-fetch'; // Required for server-side fetch in Node.js
+import fetch from 'node-fetch'; // Only needed in Node.js environments like Vercel functions
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -29,11 +29,12 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-    const finalPrompt = data.choices?.[0]?.message?.content?.trim() || 'No prompt generated.';
 
+    const finalPrompt = data.choices?.[0]?.message?.content?.trim() || 'No prompt generated.';
     res.status(200).json({ prompt: finalPrompt });
+
   } catch (error) {
-    console.error('OpenAI error:', error);
+    console.error('OpenAI API Error:', error); // ✅ Now properly placed
     res.status(500).json({ prompt: 'Error generating prompt.' });
   }
 }
