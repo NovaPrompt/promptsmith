@@ -48,13 +48,22 @@ function App() {
       </button>
 
       {prompt && (
-        <div className="result">
-          <h3>📝 Optimized Prompt:</h3>
-          <p>{prompt}</p>
-        </div>
-      )}
-    </div>
-  );
+  <div className="result">
+    <h3>📝 Optimized Prompt:</h3>
+    <p>{prompt}</p>
+    <button
+      onClick={() => {
+        navigator.clipboard.writeText(prompt);
+        alert('✅ Prompt copied to clipboard!');
+      }}
+      style={{ marginTop: '1rem' }}
+    >
+      Copy Prompt
+    </button>
+  </div>
+)}
+
+
 }
 
 export default App;
