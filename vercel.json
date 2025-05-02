@@ -1,6 +1,7 @@
 {
     "functions": {
-      "api/generatePrompt.js": {
+      "api/*.js": {
+      "api/**/*.js": {
         "runtime": "nodejs18.x"
       }
     }
