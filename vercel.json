@@ -1,8 +1,7 @@
 {
     "functions": {
-      "api/generatePrompt.js": {
-        "runtime": "nodejs18.x"
+      "api/*.js": {
+        "runtime": "vercel-nodejs@18.0.0"
       }
     }
-  }
-  
+  }  
